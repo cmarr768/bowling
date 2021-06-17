@@ -1,8 +1,7 @@
-const bowl = require("./bowl")
+const bowl = require('./bowl');
 
-describe("bowl",()=>{
-    it("should be a function", ()=>{
-        expect(typeof bowl.run === "function").toBeTruthy()
-            
-        })
-    })
+describe('bowl', () => {
+  it('should be a function', () => {
+    expect(typeof bowl.run === 'function').toBeTruthy();
+  });
+});

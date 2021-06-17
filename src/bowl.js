@@ -1,7 +1,7 @@
 const run = () => {
-    return;
-}
+  return;
+};
 
 module.exports = {
-    run
-}
+  run,
+};
