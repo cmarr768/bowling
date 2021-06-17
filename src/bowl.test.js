@@ -12,4 +12,10 @@ describe('bowl', () => {
       expect(response).toBe(12);
     });
   });
+
+  it('should interpret a - as a 0', () => {
+    const frames = ['1-', '-2', '33'];
+    const response = bowl.run(frames);
+    expect(response).toBe(9);
+  });
 });
