@@ -18,4 +18,10 @@ describe('bowl', () => {
     const response = bowl.run(frames);
     expect(response).toBe(9);
   });
+
+  it('should handle a spare that is not in the last frame', () => {
+    const frames = ['1-', '-/', '33'];
+    const response = bowl.run(frames);
+    expect(response).toBe(20);
+  });
 });
