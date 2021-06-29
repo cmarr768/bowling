@@ -13,7 +13,8 @@ frame shape {
 const run = (frames) => {
   let totalScore = 0;
   let game = {};
-  frames.forEach((frame, index) => {
+  const allFrames = frames.split(' ');
+  allFrames.forEach((frame, index) => {
     const rolls = frame.split('');
     const first = rolls[0];
     const firstRoll = getRoll(first);

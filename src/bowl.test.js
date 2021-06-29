@@ -7,27 +7,21 @@ describe('bowl', () => {
 
   describe('when all frames have number scores', () => {
     it('should return the total score of the frames passed in', () => {
-      const frames = ['11', '22', '33'];
+      const frames = '11 11 11 11 11 11 11 11 11 11';
       const response = bowl.run(frames);
-      expect(response).toBe(12);
+      expect(response).toBe(20);
     });
   });
 
   it('should interpret a - as a 0', () => {
-    const frames = ['1-', '-2', '33'];
+    const frames = '-1 1- 11 -- 11 11 11 11 11 11';
     const response = bowl.run(frames);
-    expect(response).toBe(9);
+    expect(response).toBe(16);
   });
 
   it('should handle a spare that is not in the last frame', () => {
-    const frames = ['1-', '-/', '33'];
+    const frames = '-- -/ 33 -- -- -- -- -- -- --';
     const response = bowl.run(frames);
-    expect(response).toBe(20);
-  });
-
-  it('should handle ten frames', () => {
-    const frames = ['1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-'];
-    const response = bowl.run(frames);
-    expect(response).toBe(10);
+    expect(response).toBe(19);
   });
 });
