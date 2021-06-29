@@ -6,7 +6,7 @@ describe('bowl', () => {
   });
 
   describe('when all frames have number scores', () => {
-    it('should return the total scrore of the frames passed in', () => {
+    it('should return the total score of the frames passed in', () => {
       const frames = ['11', '22', '33'];
       const response = bowl.run(frames);
       expect(response).toBe(12);
@@ -23,5 +23,11 @@ describe('bowl', () => {
     const frames = ['1-', '-/', '33'];
     const response = bowl.run(frames);
     expect(response).toBe(20);
+  });
+
+  it('should handle ten frames', () => {
+    const frames = ['1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-', '1-'];
+    const response = bowl.run(frames);
+    expect(response).toBe(10);
   });
 });
