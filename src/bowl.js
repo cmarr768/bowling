@@ -1,85 +1,57 @@
-/*
-frame shape {
-  firstRoll: int
-  secondRoll: int
-  thirdRoll: int
-  isStrike: bool
-  isSpare: bool
-  extraPins: int
-  score: int
-}
-*/
+const frame = require('./frame');
+const pipe = require('./pipe');
 
-const run = (frames) => {
-  let totalScore = 0;
-  let game = {};
-  const allFrames = frames.split(' ');
-  allFrames.forEach((frame, index) => {
-    game[index + 1] = getFrame(frame, index);
-  });
+const getFramesFromCard = (scoreCard) => scoreCard.split(' ');
 
-  console.log('game', Object.values(game));
-  const gameArray = Object.values(game);
-  gameArray.forEach((f) => {
-    if (f.isSpare) {
-      const nextFrame = game[f.frame + 1];
-      if (nextFrame) {
-        f.score += nextFrame.firstRoll;
+const transformFrames = async (frames) => {
+  return await Promise.all(
+    frames.map((frameString, index) => {
+      return frame.get({ frame: frameString, index });
+    })
+  );
+};
+
+const adjustPinfall = (frames) => {
+  for (const frame of frames) {
+    if (frame.frame !== 10) {
+      if (frame.hasSpare) {
+        frame.additionalPins = frames[frame.frame].firstPinfall;
+        frame.total += frame.additionalPins;
+      } else if (frame.hasStrike) {
+        if (frames[frame.frame].hasStrike) {
+          frame.additionalPins =
+            frames[frame.frame].firstPinfall +
+            (frame.frame === 9
+              ? frames[frame.frame].secondPinfall
+              : frames[frame.frame + 1].firstPinfall);
+          frame.total += frame.additionalPins;
+        } else {
+          frame.additionalPins =
+            frames[frame.frame].firstPinfall +
+            frames[frame.frame].secondPinfall;
+          frame.total += frame.additionalPins;
+        }
       }
     }
-  });
-
-  console.log('game', Object.values(game));
-  const newTotalScore = gameArray.reduce((total, frame) => {
-    return total + frame.score;
-  }, 0);
-  console.log('new total score', newTotalScore);
-
-  return newTotalScore;
-};
-
-const getFrame = (frame, index) => {
-  const rolls = frame.split('');
-  const first = rolls[0];
-  const firstRoll = getRoll(first);
-  const second = rolls.length > 1 ? rolls[1] : undefined;
-  const secondRoll = getRoll(second);
-  const third = frames.length > 2 ? rolls[2] : undefined;
-  const thirdRoll = getRoll(third);
-  const score = firstRoll + secondRoll + thirdRoll;
-
-  return {
-    frame: index + 1,
-    firstRoll,
-    secondRoll,
-    thirdRoll,
-    score,
-    isStrike: isStrike(frame),
-    isSpare: isSpare(frame),
-  };
-};
-
-const getRoll = (roll) => {
-  if (!roll) return 0;
-  switch (roll.toLowerCase()) {
-    case '-':
-      return 0;
-    case 'x':
-      return 10;
-    case '/':
-      return 10;
-    default:
-      return parseInt(roll);
   }
+  console.log(frames);
+  return frames;
 };
 
-const isStrike = (frame) => {
-  return frame.toLowerCase().indexOf('x') > -1;
+const calculateTotalScore = (frames) => {
+  // console.log(frames);
+  return frames.reduce((total, frame) => {
+    total += frame.total;
+    return total;
+  }, 0);
 };
 
-const isSpare = (frame) => {
-  return frame.toLowerCase().indexOf('/') > -1;
-};
+const run = pipe(
+  getFramesFromCard,
+  transformFrames,
+  adjustPinfall,
+  calculateTotalScore
+);
 
 module.exports = {
   run,
