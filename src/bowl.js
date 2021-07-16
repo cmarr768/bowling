@@ -34,12 +34,10 @@ const adjustPinfall = (frames) => {
       }
     }
   }
-  console.log(frames);
   return frames;
 };
 
 const calculateTotalScore = (frames) => {
-  // console.log(frames);
   return frames.reduce((total, frame) => {
     total += frame.total;
     return total;

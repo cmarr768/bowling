@@ -14,10 +14,15 @@ const getFrameRolls = ({ rolls, index }) => {
 };
 
 const calculatePinfall = (frame) => {
+  const isTenthFrame = frame.frame === 10;
+  const tenthSecondBallSpare = isTenthFrame && frame.secondRoll === '/';
+  const tenthThirdBallSpare = isTenthFrame && frame.thirdRoll === '/';
   const firstPinfall = getPinfall(frame.firstRoll);
   const secondPinfall =
-    getPinfall(frame.secondRoll) - (frame.hasSpare ? firstPinfall : 0);
-  const thirdPinfall = getPinfall(frame.thirdRoll);
+    getPinfall(frame.secondRoll) -
+    (frame.hasSpare || tenthSecondBallSpare ? firstPinfall : 0);
+  const thirdPinfall =
+    getPinfall(frame.thirdRoll) - (tenthThirdBallSpare ? secondPinfall : 0);
   return {
     ...frame,
     firstPinfall,

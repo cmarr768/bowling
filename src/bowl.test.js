@@ -68,4 +68,36 @@ describe('bowl', () => {
       expect(response).toBe(85);
     });
   });
+
+  describe('the 10th frame', () => {
+    it('should give the right score when a spare is bowled first', async () => {
+      const frames = '11 11 11 11 11 11 11 11 11 1/9';
+      const response = await bowl.run(frames);
+      expect(response).toBe(37);
+    });
+
+    it('should give the right score when a spare is bowled second', async () => {
+      const frames = '11 11 11 11 11 11 11 11 11 x1/';
+      const response = await bowl.run(frames);
+      expect(response).toBe(38);
+    });
+
+    it('should give the right score when three strikes are bowled', async () => {
+      const frames = '11 11 11 11 11 11 11 11 11 xxx';
+      const response = await bowl.run(frames);
+      expect(response).toBe(48);
+    });
+  });
+
+  it('should score an all spare game', async () => {
+    const frames = '9/ 9/ 9/ 9/ 9/ 9/ 9/ 9/ 9/ 9/9';
+    const response = await bowl.run(frames);
+    expect(response).toBe(190);
+  });
+
+  it('should score a 300 game', async () => {
+    const frames = 'x x x x x x x x x xxx';
+    const response = await bowl.run(frames);
+    expect(response).toBe(300);
+  });
 });
